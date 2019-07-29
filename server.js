@@ -3,6 +3,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const expressGraphQL = require('express-graphql');
 
+const graphQLSchema = require('./graphql/schema/schema');
+const graphQLResolvers = require('./graphql/resolvers');
+
 const { connectDB } = require('./config/db');
 
 const app = express();
@@ -14,8 +17,8 @@ app.use(bodyParser.json());
 app.use(
     '/api',
     expressGraphQL({
-        schema: {},
-        rootValue: {},
+        schema: graphQLSchema,
+        rootValue: graphQLResolvers,
         graphiql: true,
     }),
 );
