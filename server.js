@@ -7,12 +7,14 @@ const graphQLSchema = require('./graphql/schema/schema');
 const graphQLResolvers = require('./graphql/resolvers');
 
 const { connectDB } = require('./config/db');
+const isAuth = require('./middleware/isAuth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(isAuth);
 
 app.use(
     '/api',

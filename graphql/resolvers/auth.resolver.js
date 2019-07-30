@@ -25,14 +25,17 @@ module.exports = {
             user.save();
 
             const token = jwt.sign(
-                { id: user._id },
+                {
+                    userId: user._id,
+                    email: user.email,
+                },
                 'myverysecretkey',
                 {
                     expiresIn: 3600,
                 },
             );
 
-            return { token, password: null, ...user._doc };
+            return { token, tokenExpiration: 2, password: null, ...user._doc };
         } catch (err) {
             throw err;
         }
@@ -49,14 +52,17 @@ module.exports = {
             if (!isPasswordValid) throw new Error('Invalid password');
 
             const token = jwt.sign(
-                { id: user._id },
+                {
+                    userId: user._id,
+                    email: user.email,
+                },
                 'myverysecretkey',
                 {
-                    expiresIn: 3600,
+                    expiresIn: '2h',
                 },
             );
 
-            return { token, password: null, ...user._doc };
+            return { token, tokenExpiration: 2, password: null, ...user._doc };
         } catch (err) {
             throw err;
         }
@@ -64,7 +70,7 @@ module.exports = {
     verifyToken: async args => {
         try {
             const decoded = await jwt.decode(args.token, 'myverysecretkey');
-            const user = await User.findOne({ _id: decoded.id });
+            const user = await User.findOne({ _id: decoded.userId });
 
             return { ...user._doc, password: null };
         } catch (err) {
