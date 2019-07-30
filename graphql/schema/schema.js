@@ -6,6 +6,11 @@ module.exports = buildSchema(`
         email: String!
         username: String!
         token: String!
+        tokenExpiration: Int!
+        categories: [Category!]
+        userSettings: UserSettings!
+        transactions: [Transaction!]
+        requiredTransactions: [RequiredTransaction!]
     }
 
     type Category {
@@ -74,11 +79,14 @@ module.exports = buildSchema(`
         login(email: String!, password: String!): User
         verifyToken(token: String!): User
         category(_id: ID!): Category
-        categories: [Category]
+        categories: [Category!]
+        categoriesByType(type: Int!): [Category!]
         transaction(_id: ID!): Transaction
-        transactions: [Transaction]
+        transactions: [Transaction!]
+        transactionsByType(type: Int!): [Transaction!]
         requiredTransaction(_id: ID!): RequiredTransaction
-        requiredTransactions: [RequiredTransaction]
+        requiredTransactions: [RequiredTransaction!]
+        requiredTransactionsByType(type: Int!): [RequiredTransaction!]
         userSettings(user_id: ID!): UserSettings
     }
 

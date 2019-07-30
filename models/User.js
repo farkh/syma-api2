@@ -17,6 +17,28 @@ const userSchema = new Schema({
         required: true,
         min: 4,
     },
+    categories: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Category',
+        },
+    ],
+    transactions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Transaction',
+        },
+    ],
+    requiredTransactions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'RequiredTransactions',
+        },
+    ],
+    userSettings: {
+        type: Schema.Types.ObjectId,
+        ref: 'UserSettings',
+    },
 });
 
 module.exports = User = mongoose.model('User', userSchema);
