@@ -73,6 +73,7 @@ module.exports = buildSchema(`
         type: Int!
         description: String!
         amount: Float!
+        date: Int!
     }
 
     type RootQuery {

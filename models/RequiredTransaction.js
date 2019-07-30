@@ -27,7 +27,7 @@ const requiredTransactionSchema = new Schema({
         default: 0,
     },
     date: {
-        type: Date,
+        type: String,
         required: true,
     },
 });
