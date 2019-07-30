@@ -11,7 +11,7 @@ const userSettingsSchema = new Schema({
         required: true,
         default: 0,
     },
-    total_expenses: {
+    total_required_expenses: {
         type: Number,
         required: true,
         default: 0,
