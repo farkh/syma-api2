@@ -47,6 +47,10 @@ module.exports = buildSchema(`
         total_required_expenses: Float!
         savings_percent: Int!
         day_limit: Float!
+        paydate: Int!
+        advanced_date: Int
+        curr_balance: Int!
+        isSavedThisMonth: Boolean!
     }
 
     input UserInput {
@@ -68,11 +72,20 @@ module.exports = buildSchema(`
         amount: Float!
     }
 
+    input UserSettingsInput {
+        savings_percent: Int
+        paydate: Int
+        advance_date: Int
+        curr_balance: Float
+        isSavedThisMonth: Boolean
+    }
+
     input RequiredTransactionInput {
         category_id: String!
         type: Int!
         description: String!
         amount: Float!
+        date: Int!
     }
 
     type RootQuery {
@@ -95,6 +108,8 @@ module.exports = buildSchema(`
         createCategory(category: CategoryInput): Category
         createTransaction(transaction: TransactionInput): Transaction
         createRequiredTransaction(requiredTransaction: RequiredTransactionInput): RequiredTransaction
+        createUserSettings: UserSettings
+        updateUserSettings(userSettings: UserSettingsInput): UserSettings
     }
 
     schema {
