@@ -25,6 +25,24 @@ const userSettingsSchema = new Schema({
         type: Number,
         required: true,
     },
+    paydate: {
+        type: Number,
+        required: true,
+    },
+    advance_date: {
+        type: Number,
+        default: 0,
+    },
+    curr_balance: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    isSavedThisMonth: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 });
 
 module.exports = UserSettings = mongoose.model('UserSettings', userSettingsSchema);
