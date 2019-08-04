@@ -116,6 +116,8 @@ module.exports = {
                 }
             }
 
+            console.log('NUMBER OF DAYS BEFORE PAYMENT', numberOfDaysBeforePayment);
+
             dayLimit = await _calculateDayLimit({
                 user_id: req.userId,
                 numberOfDaysBeforePayment,
@@ -148,12 +150,13 @@ module.exports = {
 
         try {
             const user = await User.findById(req.userId);
-            const userSettings = await UserSettings.findById(user.user_settings);
+            const userSettings = await UserSettings.findOne({ user_id: req.userId });
 
-            // || userSettings.user_id != req.userId
-            if (!userSettings) throw new Error('UserSettings not found');
+            console.log('REQ USER ID', req.userId, userSettings._doc, user._doc);
 
-            return { ...userSettings._doc, user_id: user };
+            if (!userSettings || userSettings.user_id != req.userId) throw new Error('UserSettings not found');
+
+            return { ...userSettings._doc, user_id: user._doc };
         } catch (err) {
             throw err;
         }

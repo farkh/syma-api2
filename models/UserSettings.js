@@ -19,7 +19,7 @@ const userSettingsSchema = new Schema({
     savings_percent: {
         type: Number,
         required: true,
-        default: 0.3,
+        default: 30,
     },
     day_limit: {
         type: Number,
