@@ -8,7 +8,7 @@ const createCategory = async (req, res) => {
 
         const { type, name } = req.body;
         const category = new Category({
-            name, type,
+            name, type, user_id: req.user.id,
         });
 
         await category.save();
@@ -24,6 +24,7 @@ const getCategory = async (req, res) => {
         const category = await Category.findById(req.params.id);
 
         if (!category) return res.status(404).json({ success: false, msg: 'No category found with that ID' });
+        if (category.user_id != req.user.id) return res.status(404).json({ success: false, msg: 'No category found with that ID' });
 
         return res.status(200).json({ success: true, category });
     } catch (err) {
@@ -33,9 +34,21 @@ const getCategory = async (req, res) => {
 
 const getCategories = async (req, res) => {
     try {
-        const categories = await Category.find();
+        const categories = await Category.find({ user_id: req.user.id });
 
         if (!categories) return res.status(404).json({ success: false, msg: 'No categories found' });
+
+        return res.status(200).json({ success: true, categories });
+    } catch (err) {
+        return res.status(500).json({ success: false, msg: err });
+    }
+};
+
+const getCategoriesByType = async (req, res) => {
+    try {
+        const categories = await Category.find({ user_id: req.user.id, type: req.body.type });
+
+        if (!categories) return res.status(404).json({ success: false, msg: 'No categories found' }); 
 
         return res.status(200).json({ success: true, categories });
     } catch (err) {
@@ -47,4 +60,5 @@ module.exports = {
     createCategory,
     getCategory,
     getCategories,
+    getCategoriesByType,
 };
