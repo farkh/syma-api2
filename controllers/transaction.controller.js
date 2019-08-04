@@ -2,9 +2,9 @@ const Transaction = require('../models/Transaction');
 
 const createTransaction = async (req, res) => {
     try {
-        const { category_id, type, description, amount } = req.body;
+        const { category_id, type, description, amount, datetime } = req.body;
         const transaction = new Transaction({
-            type, category_id, amount, description, user_id: req.user.id,
+            type, category_id, amount, description, user_id: req.user.id, datetime,
         });
 
         await transaction.save();
@@ -64,10 +64,31 @@ const getTransactionsByCategory = async (req, res) => {
     }  
 };
 
+const getTransactionsByDate = async (req, res) => {
+    try {
+        let { date } = req.body;
+        date = new Date(date).toLocaleDateString();
+        
+        const allTransactions = await Transaction.find();
+        const transactions = allTransactions.filter((transaction) => {
+            const transactionDate = new Date(transaction.datetime).toLocaleDateString();
+
+            return transactionDate == date;
+        });
+
+        if (!transactions) return res.status(404).json({ success: false, msg: 'No transactions found' });
+
+        return res.status(200).json({ success: true, transactions });
+    } catch (err) {
+        return res.status(500).json({ success: false, msg: err });
+    }
+};
+
 module.exports = {
     createTransaction,
     getTransaction,
     getTransactions,
     getTransactionsByType,
     getTransactionsByCategory,
+    getTransactionsByDate,
 };

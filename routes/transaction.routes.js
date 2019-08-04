@@ -8,6 +8,7 @@ const {
     getTransactions,
     getTransactionsByType,
     getTransactionsByCategory,
+    getTransactionsByDate,
 } = require('../controllers/transaction.controller');
 
 // @route   POST api/transactions
@@ -34,5 +35,11 @@ router.get('/all', passport.authenticate('jwt', { session: false }), getTransact
 // @desc    Get all transactions by category id
 // @access  Private
 router.get('/category', passport.authenticate('jwt', { session: false }), getTransactionsByCategory);
+
+// @route   GET api/transactions/date
+// @desc    Get all transactions by date
+// @access  Private
+router.get('/date', passport.authenticate('jwt', { session: false }), getTransactionsByDate);
+
 
 module.exports = router;
