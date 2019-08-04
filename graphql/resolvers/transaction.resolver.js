@@ -58,7 +58,7 @@ module.exports = {
     },
     transactions: async (args, req) => {
         if (!req.isAuth) throw new Error('Unauthenticated');
-
+        
         try {
             const user = await User.findById(req.userId);
             const transactions = await Transaction.find({ user_id: req.userId });

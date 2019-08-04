@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../../models/User');
+const UserSettings = require('../../models/UserSettings');
 
 module.exports = {
     createUser: async args => {
@@ -22,6 +23,17 @@ module.exports = {
                 password: hashedPassword,
             });
 
+            await user.save();
+
+            const userSettings = new UserSettings({
+                user_id: user._id,
+                day_limit: 0,
+                paydate: 15,
+                curr_balance: 0,
+            });
+
+            await userSettings.save();
+            user.userSettings = userSettings;
             user.save();
 
             const token = jwt.sign(
@@ -35,7 +47,7 @@ module.exports = {
                 },
             );
 
-            return { token, tokenExpiration: 2, password: null, ...user._doc };
+            return { token, tokenExpiration: 2, password: null, ...user._doc, };
         } catch (err) {
             throw err;
         }
@@ -50,6 +62,8 @@ module.exports = {
 
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) throw new Error('Invalid password');
+
+            const userSettings = await UserSettings.findOne({ user_id: user._id });
 
             const token = jwt.sign(
                 {
