@@ -1,28 +1,29 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const passport = require('passport');
+const expressGraphQL = require('express-graphql');
+
+const graphQLSchema = require('./graphql/schema/schema');
+const graphQLResolvers = require('./graphql/resolvers');
 
 const { connectDB } = require('./config/db');
-const user = require('./routes/user.routes');
-const category = require('./routes/category.routes');
-const transaction = require('./routes/transaction.routes');
+const isAuth = require('./middleware/isAuth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(passport.initialize());
+app.use(isAuth);
 
-// Passport config
-require('./config/passport')(passport);
-
-// Use routes
-app.use('/api/user', user);
-app.use('/api/categories', category);
-app.use('/api/transactions', transaction);
+app.use(
+    '/api',
+    expressGraphQL({
+        schema: graphQLSchema,
+        rootValue: graphQLResolvers,
+        graphiql: true,
+    }),
+);
 
 const main = () => {
     connectDB();
