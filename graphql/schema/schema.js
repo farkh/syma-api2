@@ -48,7 +48,7 @@ module.exports = buildSchema(`
         savings_percent: Int!
         day_limit: Float!
         paydate: Int!
-        advanced_date: Int
+        advance_date: Int
         curr_balance: Int!
         isSavedThisMonth: Boolean!
     }
@@ -100,7 +100,7 @@ module.exports = buildSchema(`
         requiredTransaction(_id: ID!): RequiredTransaction
         requiredTransactions: [RequiredTransaction!]
         requiredTransactionsByType(type: Int!): [RequiredTransaction!]
-        userSettings(user_id: ID!): UserSettings
+        userSettings: UserSettings
     }
 
     type RootMutation {
