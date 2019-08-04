@@ -1,4 +1,5 @@
 const Transaction = require('../models/Transaction');
+const User = require('../models/User');
 
 const createTransaction = async (req, res) => {
     try {
@@ -8,6 +9,10 @@ const createTransaction = async (req, res) => {
         });
 
         await transaction.save();
+        const user = await User.findById(req.user.id);
+
+        user.transactions.push(transaction);
+        user.save();
 
         return res.status(200).json({ success: true, transaction });
     } catch (err) {

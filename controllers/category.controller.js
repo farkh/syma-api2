@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const User = require('../models/User');
 
 const createCategory = async (req, res) => {
     try {
@@ -12,6 +13,10 @@ const createCategory = async (req, res) => {
         });
 
         await category.save();
+        const user = await User.findById(req.user.id);
+
+        user.categories.push(category);
+        user.save();
 
         return res.status(200).json({ success: true, category });
     } catch (err) {
