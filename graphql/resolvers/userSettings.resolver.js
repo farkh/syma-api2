@@ -150,7 +150,8 @@ module.exports = {
             const user = await User.findById(req.userId);
             const userSettings = await UserSettings.findById(user.user_settings);
 
-            if (!userSettings || userSettings.user_id != req.userId) throw new Error('UserSettings not found');
+            // || userSettings.user_id != req.userId
+            if (!userSettings) throw new Error('UserSettings not found');
 
             return { ...userSettings._doc, user_id: user };
         } catch (err) {
