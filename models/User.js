@@ -17,6 +17,10 @@ const userSchema = new Schema({
         required: true,
         min: 4,
     },
+    avatar: {
+        type: String,
+        required: true,
+    },
     categories: [
         {
             type: Schema.Types.ObjectId,
