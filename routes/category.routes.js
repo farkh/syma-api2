@@ -19,5 +19,4 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), getCategory
 // @access  Private
 router.get('/', passport.authenticate('jwt', { session: false }), getCategories);
 
-
 module.exports = router;
