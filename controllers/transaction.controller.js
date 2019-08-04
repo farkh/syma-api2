@@ -52,9 +52,22 @@ const getTransactionsByType = async (req, res) => {
     }
 };
 
+const getTransactionsByCategory = async (req, res) => {
+    try {
+        const transactions = await Transaction.find({ user_id: req.user.id, category_id: req.body.category_id });
+
+        if (!transactions) return res.status(404).json({ success: false, msg: 'No transactions found' });
+
+        return res.status(200).json({ success: true, transactions });
+    } catch (err) {
+        return res.status(500).json({ success: false, msg: err });
+    }  
+};
+
 module.exports = {
     createTransaction,
     getTransaction,
     getTransactions,
     getTransactionsByType,
+    getTransactionsByCategory,
 };
