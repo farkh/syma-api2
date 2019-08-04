@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 
 const User = require('../models/User');
+const UserSettings = require('../models/UserSettings');
 
 const register = async (req, res) => {
     try {
@@ -32,6 +33,17 @@ const register = async (req, res) => {
                 user.password = hash;
 
                 await user.save();
+
+                const userSettings = new UserSettings({
+                    user_id: user._id,
+                    day_limit: 0,
+                    paydate: 15,
+                    curr_balance: 0,
+                });
+
+                await userSettings.save();
+                user.userSettings = userSettings;
+                user.save();
 
                 return res.status(200).json({ success: true, user });
             });
