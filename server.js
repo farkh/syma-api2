@@ -7,6 +7,7 @@ const { connectDB } = require('./config/db');
 const user = require('./routes/user.routes');
 const category = require('./routes/category.routes');
 const transaction = require('./routes/transaction.routes');
+const requiredTransaction = require('./routes/requiredTransaction.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +24,7 @@ require('./config/passport')(passport);
 app.use('/api/user', user);
 app.use('/api/categories', category);
 app.use('/api/transactions', transaction);
+app.use('/api/required/transactions', requiredTransaction);
 
 const main = () => {
     connectDB();
