@@ -1,5 +1,8 @@
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
+const UserSettings = require('../models/UserSettings');
+
+const TransactionTypes = require('../constants/transactionTypes');
 
 const createTransaction = async (req, res) => {
     try {
@@ -10,8 +13,13 @@ const createTransaction = async (req, res) => {
 
         await transaction.save();
         const user = await User.findById(req.user.id);
+        const userSettings = await UserSettings.findOne({ user_id: req.user.id });
 
         user.transactions.push(transaction);
+        userSettings.curr_balance = +type === TransactionTypes.EXPENSE ?
+            +userSettings.curr_balance - +amount :
+            +userSettings.curr_balance + +amount;
+        userSettings.save(); 
         user.save();
 
         return res.status(200).json({ success: true, transaction });
@@ -89,6 +97,24 @@ const getTransactionsByDate = async (req, res) => {
     }
 };
 
+const deleteTransaction = async (req, res) => {
+    try {
+        const transaction = await Transaction.findById(req.params.id);
+        const userSettings = await UserSettings.findOne({ user_id: req.user.id });
+
+        const { amount, type } = transaction;
+        transaction.remove();
+        userSettings.curr_balance = type === TransactionTypes.EXPENSE ?
+            +userSettings.curr_balance + amount :
+            +userSettings.curr_balance - amount;
+        userSettings.save();
+
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        return res.status(500).json({ success: false, msg: err });
+    }
+};
+
 module.exports = {
     createTransaction,
     getTransaction,
@@ -96,4 +122,5 @@ module.exports = {
     getTransactionsByType,
     getTransactionsByCategory,
     getTransactionsByDate,
+    deleteTransaction,
 };

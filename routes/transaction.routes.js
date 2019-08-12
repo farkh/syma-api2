@@ -9,6 +9,7 @@ const {
     getTransactionsByType,
     getTransactionsByCategory,
     getTransactionsByDate,
+    deleteTransaction,
 } = require('../controllers/transaction.controller');
 
 // @route   POST api/transactions
@@ -40,6 +41,11 @@ router.get('/category', passport.authenticate('jwt', { session: false }), getTra
 // @desc    Get all transactions by date
 // @access  Private
 router.get('/date', passport.authenticate('jwt', { session: false }), getTransactionsByDate);
+
+// @route   DELETE api/transactions/
+// @desc    Delete transaction by id
+// @access  Private
+router.delete('/:id', passport.authenticate('jwt', { session: false }), deleteTransaction);
 
 
 module.exports = router;
