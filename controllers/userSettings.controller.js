@@ -37,6 +37,32 @@ const _calculateDayLimit = async ({
     return dayLimit;
 };
 
+const _getNumberOfDaysBeforePayment = ({ advance_date, paydate }) => {
+    const currentDate = new Date().getDate();
+
+    // If advance
+    if (advance_date && typeof advance_date === 'number') {
+        if (currentDate < advance_date && currentDate > paydate) {
+            return advance_date - currentDate + 1;
+        } else if (currentDate < advance_date) {
+            return paydate - currentDate + 1;
+        } else {
+            return 0;
+        }
+    }
+
+    // If no advance
+    if (currentDate > paydate) {
+        const date = new Date();
+        const currMonthsLastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        return paydate + currMonthsLastDate - currentDate + 1;
+    } else if (currentDate < paydate) {
+        return paydate - currentDate + 1;
+    } else {
+        return 0;
+    }
+};
+
 const createUserSettings = async (req, res) => {
     try {
         const existing = await UserSettings.findOne({ user_id: req.user.id });
@@ -83,40 +109,40 @@ const updateUserSettings = async (req, res) => {
         if (!userSettings) return res.status(404).json({ success: false, msg: 'UserSettings not found' });
 
         const { body: userSettingsInput } = req;
+
         const paydate = +userSettingsInput.paydate || userSettings.paydate;
-        const advance_date = +userSettingsInput.advance_date || userSettings.advance_date;
-        const savings_percent = +userSettingsInput.savings_percent || userSettings.savings_percent;
+        const advance_date = (+userSettingsInput.advance_date || +userSettingsInput.advance_date === 0) ?
+            +userSettingsInput.advance_date :
+            userSettings.advance_date;
+        const savings_percent = (+userSettingsInput.savings_percent || +userSettingsInput.savings_percent === 0) ?
+            +userSettingsInput.savings_percent :
+            userSettings.savings_percent;
         const curr_balance = +userSettingsInput.curr_balance || userSettings.curr_balance;
         const isSavedThisMonth = typeof userSettingsInput.isSavedThisMonth === 'boolean' ?
             userSettingsInput.isSavedThisMonth :
             userSettings.isSavedThisMonth;
 
-        const currentDate = new Date().getDate();
         let numberOfDaysBeforePayment = 0;
         let dayLimit = curr_balance;
 
-        if (currentDate > paydate) {
-            const date = new Date();
-            const currMonthsLastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-            numberOfDaysBeforePayment = paydate + currMonthsLastDate - currentDate;
-        } else if (currentDate < paydate) {
-            numberOfDaysBeforePayment = paydate - currentDate;
-        } else {
+        numberOfDaysBeforePayment = _getNumberOfDaysBeforePayment({ advance_date, paydate });
+
+        if (numberOfDaysBeforePayment === 0) {
             dayLimit = curr_balance;
-            
+        
             await UserSettings.findOneAndUpdate({ user_id: req.user.id }, {
                 paydate,
-                advance_date,
-                savings_percent,
+                advance_date: advance_date === 0 ? null : advance_date,
+                savings_percent: savings_percent === 0 ? null : savings_percent,
                 isSavedThisMonth,
                 curr_balance,
-                day_limit: dayLimit,
+                day_limit: Math.round(dayLimit),
             }, { useFindAndModify: false });
             const updatedUserSettings = await UserSettings.findOne({ user_id: req.user.id });
 
             return res.status(200).json({ success: true, updatedUserSettings });
         }
-
+        
         dayLimit = await _calculateDayLimit({
             user_id: req.user.id,
             numberOfDaysBeforePayment,
@@ -128,11 +154,11 @@ const updateUserSettings = async (req, res) => {
 
         await UserSettings.findOneAndUpdate({ user_id: req.user.id }, {
             paydate,
-            advance_date,
-            savings_percent,
+            advance_date: advance_date === 0 ? null : advance_date,
+            savings_percent: savings_percent === 0 ? null : savings_percent,
             isSavedThisMonth,
             curr_balance,
-            day_limit: dayLimit,
+            day_limit: Math.round(dayLimit),
         }, { useFindAndModify: false });
         const updatedUserSettings = await UserSettings.findOne({ user_id: req.user.id });
         
