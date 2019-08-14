@@ -8,6 +8,7 @@ const user = require('./routes/user.routes');
 const category = require('./routes/category.routes');
 const transaction = require('./routes/transaction.routes');
 const requiredTransaction = require('./routes/requiredTransaction.routes');
+const userSettings = require('./routes/userSettings.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,6 +26,7 @@ app.use('/api/user', user);
 app.use('/api/categories', category);
 app.use('/api/transactions', transaction);
 app.use('/api/required/transactions', requiredTransaction);
+app.use('/api/userSettings', userSettings);
 
 const main = () => {
     connectDB();
