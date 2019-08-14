@@ -31,7 +31,6 @@ const userSettingsSchema = new Schema({
     },
     advance_date: {
         type: Number,
-        default: 0,
     },
     curr_balance: {
         type: Number,
