@@ -38,13 +38,20 @@ const _calculateDayLimit = async ({
 };
 
 const _getNumberOfDaysBeforePayment = ({ advance_date, paydate }) => {
-    const currentDate = new Date().getDate();
+    const date = new Date();
+    const currentDate = date.getDate();
+    let advanceDate = advance_date;
+
+    if (advance_date > 31) {
+        const lastDateOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        advanceDate = lastDateOfMonth;
+    }
 
     // If advance
-    if (advance_date && typeof advance_date === 'number') {
-        if (currentDate < advance_date && currentDate > paydate) {
-            return advance_date - currentDate + 1;
-        } else if (currentDate < advance_date) {
+    if (advanceDate && typeof advanceDate === 'number') {
+        if (currentDate < advanceDate && currentDate > paydate) {
+            return advanceDate - currentDate + 1;
+        } else if (currentDate < advanceDate) {
             return paydate - currentDate + 1;
         } else {
             return 0;
