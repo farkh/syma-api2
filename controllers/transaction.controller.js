@@ -43,7 +43,14 @@ const getTransaction = async (req, res) => {
 
 const getTransactions = async (req, res) => {
     try {
-        const transactions = await Transaction.find({});
+        const { moreThan } = req.body;
+        let transactions = null;
+
+        if (moreThan) {
+            transactions = await Transaction.find({}).where('amount').gt(moreThan);
+        } else {
+            transactions = await Transaction.find({});
+        }
 
         if (!transactions) return res.status(404).json({ success: false, msg: 'No transactions found' });
 
