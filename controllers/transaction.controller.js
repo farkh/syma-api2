@@ -47,7 +47,7 @@ const getTransactions = async (req, res) => {
         let transactions = null;
 
         if (moreThan) {
-            transactions = await Transaction.find({}).where('amount').gt(moreThan);
+            transactions = await Transaction.find({ user_id: req.user.id }).where('amount').gt(moreThan);
         } else {
             transactions = await Transaction.find({});
         }
