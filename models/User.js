@@ -21,6 +21,11 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    isAdmin: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     categories: [
         {
             type: Schema.Types.ObjectId,
