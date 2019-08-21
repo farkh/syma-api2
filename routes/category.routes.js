@@ -7,6 +7,7 @@ const {
     getCategory,
     getCategories,
     getCategoriesByType,
+    deleteCategoryById,
 } = require('../controllers/category.controller');
 
 // @route   POST api/categories
@@ -28,5 +29,10 @@ router.get('/all', passport.authenticate('jwt', { session: false }), getCategori
 // @desc    Get all categories by type
 // @access  Private
 router.get('/type/:type', passport.authenticate('jwt', { session: false }), getCategoriesByType);
+
+// @route   DELETE api/categories/one/:id
+// @desc    Delte category by id
+// @access  Private
+router.delete('/one/:id', passport.authenticate('jwt', { session: false }), deleteCategoryById);
 
 module.exports = router;

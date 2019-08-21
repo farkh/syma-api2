@@ -17,6 +17,11 @@ const categorySchema = new Schema({
         min: 3,
         max: 20,
     },
+    editable: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
 });
 
 module.exports = Category = mongoose.model('Category', categorySchema);

@@ -14,6 +14,8 @@ const register = async (req, res) => {
 
         const { email, username, password, confirm } = req.body;
 
+        console.log('EMAIL', email, username, password, confirm);
+
         if (password !== confirm) return res.status(400).json({ msg: 'Passwords must match' });
 
         const avatar = gravatar.url(req.body.email, {
