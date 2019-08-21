@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const categorySchema = new Schema({
-    user_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-    },
+const defaultCategorySchema = new Schema({
     type: {
         type: Number,
         required: true,
@@ -20,8 +16,8 @@ const categorySchema = new Schema({
     isDefault: {
         type: Boolean,
         required: true,
-        default: false,
+        default: true,
     },
 });
 
-module.exports = Category = mongoose.model('Category', categorySchema);
+module.exports = Category = mongoose.model('DefaultCategory', defaultCategorySchema);
