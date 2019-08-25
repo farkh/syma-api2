@@ -99,10 +99,9 @@ const createUserSettings = async (req, res) => {
 
 const getUserSettings = async (req, res) => {
     try {
-        const userSettings = await UserSettings.findById(req.params.id);
+        const userSettings = await UserSettings.findOne({ user_id: req.user.id });
 
         if (!userSettings) return res.status(404).json({ success: false, msg: 'No user settings found with that ID' });
-        if (userSettings.user_id != req.user.id) return res.status(404).json({ success: false, msg: 'No user settings found with that ID' });
 
         return res.status(200).json({ success: true, userSettings });
     } catch (err) {
@@ -177,8 +176,10 @@ const updateUserSettings = async (req, res) => {
 
 const deleteUserSettings = async (req, res) => {
     try {
-        const userSettings = await UserSettings.findById(req.params.id);
+        const userSettings = await UserSettings.findOne({ user_id: req.user.id });
         const user = await User.findById(req.user.id);
+
+        if (!userSettings) return res.status(404).json({ success: false, msg: 'UserSettings not found' });
 
         userSettings.remove();
         user.userSettings = null;
