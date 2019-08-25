@@ -19,6 +19,9 @@ const createTransaction = async (req, res) => {
         userSettings.curr_balance = +type === TransactionTypes.EXPENSE ?
             +userSettings.curr_balance - +amount :
             +userSettings.curr_balance + +amount;
+        userSettings.day_limit = +type === TransactionTypes.EXPENSE ?
+            +userSettings.day_limit - +amount :
+            +userSettings.day_limit + +amount;
         userSettings.save(); 
         user.save();
 
@@ -47,7 +50,7 @@ const getTransactions = async (req, res) => {
         let transactions = null;
 
         if (moreThan) {
-            transactions = await Transaction.find({}).where('amount').gt(moreThan);
+            transactions = await Transaction.find({ user_id: req.user.id }).where('amount').gt(moreThan);
         } else {
             transactions = await Transaction.find({});
         }
