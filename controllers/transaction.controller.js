@@ -19,6 +19,9 @@ const createTransaction = async (req, res) => {
         userSettings.curr_balance = +type === TransactionTypes.EXPENSE ?
             +userSettings.curr_balance - +amount :
             +userSettings.curr_balance + +amount;
+        userSettings.day_limit = +type === TransactionTypes.EXPENSE ?
+            +userSettings.day_limit - +amount :
+            +userSettings.day_limit + +amount;
         userSettings.save(); 
         user.save();
 

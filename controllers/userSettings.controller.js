@@ -195,4 +195,7 @@ module.exports = {
     getUserSettings,
     updateUserSettings,
     deleteUserSettings,
+    _calculateDayLimit,
+    _calculateReqExpensesBeforePayment,
+    _getNumberOfDaysBeforePayment,
 };
