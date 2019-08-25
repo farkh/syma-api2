@@ -14,19 +14,19 @@ const {
 // @access  Private
 router.post('/', passport.authenticate('jwt', { session: false }), createUserSettings);
 
-// @route   GET api/userSettings/:id
+// @route   GET api/userSettings
 // @desc    Get UserSettings
 // @access  Private
-router.get('/:id', passport.authenticate('jwt', { session: false }), getUserSettings);
+router.get('/', passport.authenticate('jwt', { session: false }), getUserSettings);
 
 // @route   PATCH api/userSettings/:id
 // @desc    Update UserSettings
 // @access Private
-router.patch('/:id', passport.authenticate('jwt', { session: false }), updateUserSettings);
+router.patch('/', passport.authenticate('jwt', { session: false }), updateUserSettings);
 
 // @route   DELETE api/userSettings/:id
 // @desc    Delete UserSettings
 // @access  Private
-router.delete('/:id', passport.authenticate('jwt', { session: false }), deleteUserSettings);
+router.delete('/', passport.authenticate('jwt', { session: false }), deleteUserSettings);
 
 module.exports = router;
