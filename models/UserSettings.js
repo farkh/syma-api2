@@ -19,7 +19,7 @@ const userSettingsSchema = new Schema({
     savings_percent: {
         type: Number,
         required: true,
-        default: 0.3,
+        default: 30,
     },
     day_limit: {
         type: Number,
@@ -31,7 +31,6 @@ const userSettingsSchema = new Schema({
     },
     advance_date: {
         type: Number,
-        default: 0,
     },
     curr_balance: {
         type: Number,

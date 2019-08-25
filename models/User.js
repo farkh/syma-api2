@@ -17,6 +17,15 @@ const userSchema = new Schema({
         required: true,
         min: 4,
     },
+    avatar: {
+        type: String,
+        required: true,
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     categories: [
         {
             type: Schema.Types.ObjectId,

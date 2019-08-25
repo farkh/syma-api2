@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb://admin:admin1@ds257097.mlab.com:57097/syma-2"
+    "mongoURI": "mongodb://admin:admin1@ds257097.mlab.com:57097/syma-2",
+    "secretOrKey": "myverysecretkey"
 }
