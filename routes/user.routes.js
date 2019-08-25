@@ -4,6 +4,11 @@ const passport = require('passport');
 
 const { register, login, currentUser } = require('../controllers/user.controller');
 
+// @route   GET api/user/test
+// @desc    Test GET route
+// @access  Public
+router.post('/test', (req, res) => res.send('API works'));
+
 // @route   POST api/user/register
 // @desc    Register user
 // @access  Public
