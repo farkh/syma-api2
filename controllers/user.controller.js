@@ -45,7 +45,21 @@ const register = async (req, res) => {
                 user.userSettings = userSettings;
                 user.save();
 
-                return res.status(200).json({ success: true, user });
+                const payload = { id: user.id, username: user.username, avatar: user.avatar };
+                const secretOrKey = config.get('secretOrKey');
+
+                jwt.sign(
+                    payload,
+                    secretOrKey,
+                    { expiresIn: '2h' },
+                    (err, token) => {
+                        res.status(200).json({
+                            success: true,
+                            token: `Bearer ${token}`,
+                            tokenExpiration: 2,
+                        });
+                    },
+                );
             });
         });
     } catch (err) {
