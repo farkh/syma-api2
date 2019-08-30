@@ -103,7 +103,11 @@ const getUserSettings = async (req, res) => {
 
         if (!userSettings) return res.status(404).json({ success: false, msg: 'No user settings found with that ID' });
 
-        return res.status(200).json({ success: true, userSettings });
+        return res.status(200).json({
+            success: true,
+            ...userSettings._doc,
+            advance_date: userSettings.advance_date ? userSettings.advance_date : 0,
+        });
     } catch (err) {
         return res.status(500).json({ success: false, msg: err });
     }
@@ -168,7 +172,11 @@ const updateUserSettings = async (req, res) => {
         }, { useFindAndModify: false });
         const updatedUserSettings = await UserSettings.findOne({ user_id: req.user.id });
         
-        return res.status(200).json({ success: true, updatedUserSettings });
+        return res.status(200).json({
+            success: true,
+            ...updatedUserSettings._doc,
+            advance_date: updatedUserSettings.advance_date ? updatedUserSettings.advance_date : 0,
+        });
     } catch (err) {
         return res.status(500).json({ success: false, msg: err });
     }
